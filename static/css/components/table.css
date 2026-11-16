@@ -1,0 +1,58 @@
+
+.content-card {
+    overflow: hidden;
+}
+
+.card-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px;
+}
+
+.card-heading h2 {
+    font-size: 17px;
+    margin: 0 0 7px;
+}
+
+.record-count {
+    color: #8491a4;
+    font-size: 12px;
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 13px;
+}
+
+th {
+    background: #f8fafd;
+    color: #75839a;
+    font-weight: 600;
+    padding: 16px 24px;
+}
+
+td {
+    padding: 19px 24px;
+    border-top: 1px solid #edf0f5;
+}
+
+.id-cell {
+    color: #8290a3;
+}
+
+.product-cell {
+    font-weight: 600;
+}
+
+.empty-state {
+    text-align: center;
+    color: #8491a4;
+    padding: 30px;
+}

@@ -1,0 +1,50 @@
+
+.topbar {
+    height: 76px;
+    background: white;
+    border-bottom: 1px solid #e7ebf2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 36px;
+}
+
+.topbar-title strong,
+.system-label {
+    display: block;
+}
+
+.system-label {
+    color: #8491a4;
+    font-size: 12px;
+    margin-bottom: 3px;
+}
+
+.topbar-title strong {
+    font-size: 14px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #e7efff;
+    color: #326bc7;
+    font-weight: 700;
+}
+
+@media (max-width: 800px) {
+    .topbar {
+        padding: 0 20px;
+    }
+}
