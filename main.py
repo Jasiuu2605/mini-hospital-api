@@ -1,6 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 requests = [
     {
@@ -28,6 +33,13 @@ def root():
 @app.get("/requests")
 def get_requests():
     return requests
+
+
+@app.get("/requests/view", response_class=HTMLResponse)
+def requests_view(request: Request):
+    return templates.TemplateResponse(
+        request=request, name="requests.html", context={"requests": requests}
+    )
 
 
 @app.get("/requests/{request_id}")
