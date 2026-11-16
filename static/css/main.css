@@ -9,6 +9,7 @@
 @import url("./components/status-badge.css");
 @import url("./components/summary-card.css");
 @import url("./components/table.css");
+@import url("./components/form.css");
 
 /* Pages */
 @import url("./pages/requests.css");

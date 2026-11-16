@@ -1,0 +1,75 @@
+.form-card {
+    max-width: 650px;
+    background: white;
+    padding: 30px;
+    border: 1px solid #e9edf4;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(20, 40, 70, .025);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #344256;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dce3ed;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 14px;
+    background: white;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #3478ed;
+    box-shadow: 0 0 0 3px rgba(52, 120, 237, .12);
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #3478ed;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2865cd;
+}
+
+.btn-secondary {
+    background: #eef2f7;
+    color: #344256;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+}

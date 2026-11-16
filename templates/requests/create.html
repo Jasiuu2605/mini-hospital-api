@@ -1,20 +1,38 @@
 {% extends "base.html" %}
 {% block title %}Nowe zapotrzebowanie | Mini Hospital{% endblock %}
 {% block content %}
-    <h1>Nowe zapotrzebowanie</h1>
-    <form action="/requests/create" method="post">
+    <div class="page-heading">
         <div>
+            <div class="breadcrumb">Zapotrzebowania / Nowe</div>
+            <h1>Nowe zapotrzebowanie</h1>
+            <p>Wypełnij formularz, aby dodać nowe zapotrzebowanie.</p>
+        </div>
+    </div>
+    <form action="/requests/create" method="post" class="form-card">
+        <div class="form-group">
             <label for="department">Oddział</label>
-            <input type="text" id="department" name="department" required>
+            <input type="text"
+                   id="department"
+                   name="department"
+                   class="form-control"
+                   required>
         </div>
-        <div>
+        <div class="form-group">
             <label for="item">Produkt</label>
-            <input type="text" id="item" name="item" required>
+            <input type="text" id="item" name="item" class="form-control" required>
         </div>
-        <div>
+        <div class="form-group">
             <label for="quantity">Ilość</label>
-            <input type="number" id="quantity" name="quantity" min="1" required>
+            <input type="number"
+                   id="quantity"
+                   name="quantity"
+                   min="1"
+                   class="form-control"
+                   required>
         </div>
-        <button type="submit">Dodaj zapotrzebowanie</button>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Dodaj zapotrzebowanie</button>
+            <a href="/requests/view" class="btn btn-secondary">Anuluj</a>
+        </div>
     </form>
 {% endblock %}
