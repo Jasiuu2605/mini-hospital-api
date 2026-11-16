@@ -1,5 +1,5 @@
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Form, HTTPException, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -39,6 +39,35 @@ def get_requests():
 def requests_view(request: Request):
     return templates.TemplateResponse(
         request=request, name="requests.html", context={"requests": requests}
+    )
+
+
+@app.get("/requests/create", response_class=HTMLResponse)
+def create_request_view(request: Request):
+    return templates.TemplateResponse(request=request, name="requests/create.html")
+
+
+@app.post("/requests/create")
+def create_request(
+    department: str = Form(...),
+    item: str = Form(...),
+    quantity: int = Form(..., gt=0),
+):
+    new_id = len(requests) + 1
+
+    new_request = {
+        "id": new_id,
+        "department": department,
+        "item": item,
+        "quantity": quantity,
+        "status": "pending",
+    }
+
+    requests.append(new_request)
+
+    return RedirectResponse(
+        url="/requests/view",
+        status_code=303,
     )
 
 
