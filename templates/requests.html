@@ -1,5 +1,6 @@
 
 {% extends "base.html" %}
+{% from "components/status_badge.html" import status_badge %}
 
 {% block title %}Zapotrzebowania | Mini Hospital{% endblock %}
 
@@ -56,13 +57,7 @@
                     <td class="product-cell">{{ item.item }}</td>
                     <td>{{ item.quantity }}</td>
                     <td>
-                        {% if item.status == "approved" %}
-                            <span class="status approved">Zatwierdzone</span>
-                        {% elif item.status == "pending" %}
-                            <span class="status pending">Oczekujące</span>
-                        {% else %}
-                            <span class="status neutral">{{ item.status }}</span>
-                        {% endif %}
+                        {{ status_badge(item.status) }}
                     </td>
                 </tr>
                 {% else %}
@@ -77,3 +72,4 @@
     </div>
 </section>
 {% endblock %}
+

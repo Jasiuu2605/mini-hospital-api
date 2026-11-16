@@ -1,0 +1,9 @@
+{% macro status_badge(status) %}
+    {% if status == "aproved" %}
+        <span class="status approved">Zatwierdzone</span>
+    {% elif status == "pending" %}
+        <span class="status pending">Oczekujące</span>
+    {% else %}
+        <span class="status neutral">{{ status }}</span>
+    {% endif %}
+{% endmacro %}
