@@ -1,28 +1,24 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlmodel import Session, select
 
-app = FastAPI()
+from database import create_db_and_tables, engine
+from models import HospitalRequest
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-requests = [
-    {
-        "id": 1,
-        "department": "Kardiologia",
-        "item": "Monitor pacjenta",
-        "quantity": 2,
-        "status": "pending",
-    },
-    {
-        "id": 2,
-        "department": "Chirurgia",
-        "item": "Rękawiczki jednorazowe",
-        "quantity": 100,
-        "status": "approved",
-    },
-]
 
 
 @app.get("/")
@@ -32,11 +28,19 @@ def root():
 
 @app.get("/requests")
 def get_requests():
+    with Session(engine) as session:
+        statement = select(HospitalRequest)
+        results = session.exec(statement)
+        requests = results.all()
     return requests
 
 
 @app.get("/requests/view", response_class=HTMLResponse)
 def requests_view(request: Request):
+    with Session(engine) as session:
+        statement = select(HospitalRequest)
+        results = session.exec(statement)
+        requests = results.all()
     return templates.TemplateResponse(
         request=request, name="requests.html", context={"requests": requests}
     )
@@ -53,17 +57,13 @@ def create_request(
     item: str = Form(...),
     quantity: int = Form(..., gt=0),
 ):
-    new_id = len(requests) + 1
+    new_request = HospitalRequest(
+        department=department, item=item, quantity=quantity, status="pending"
+    )
 
-    new_request = {
-        "id": new_id,
-        "department": department,
-        "item": item,
-        "quantity": quantity,
-        "status": "pending",
-    }
-
-    requests.append(new_request)
+    with Session(engine) as session:
+        session.add(new_request)
+        session.commit()
 
     return RedirectResponse(
         url="/requests/view",
@@ -73,7 +73,8 @@ def create_request(
 
 @app.get("/requests/{request_id}")
 def get_request(request_id: int):
-    request = next((item for item in requests if item["id"] == request_id), None)
+    with Session(engine) as session:
+        request = session.get(HospitalRequest, request_id)
 
     if request is None:
         raise HTTPException(status_code=404, detail="Request not found")
