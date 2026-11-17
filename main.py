@@ -4,10 +4,10 @@ from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlmodel import Session, select
 
-from database import create_db_and_tables, engine
-from models import HospitalRequest
+from database import create_db_and_tables
+from services.request_service import create_request as create_request_service
+from services.request_service import get_all_requests, get_request_by_id
 
 
 @asynccontextmanager
@@ -28,19 +28,13 @@ def root():
 
 @app.get("/requests")
 def get_requests():
-    with Session(engine) as session:
-        statement = select(HospitalRequest)
-        results = session.exec(statement)
-        requests = results.all()
-    return requests
+    return get_all_requests()
 
 
 @app.get("/requests/view", response_class=HTMLResponse)
 def requests_view(request: Request):
-    with Session(engine) as session:
-        statement = select(HospitalRequest)
-        results = session.exec(statement)
-        requests = results.all()
+    requests = get_all_requests()
+
     return templates.TemplateResponse(
         request=request, name="requests.html", context={"requests": requests}
     )
@@ -57,13 +51,7 @@ def create_request(
     item: str = Form(...),
     quantity: int = Form(..., gt=0),
 ):
-    new_request = HospitalRequest(
-        department=department, item=item, quantity=quantity, status="pending"
-    )
-
-    with Session(engine) as session:
-        session.add(new_request)
-        session.commit()
+    create_request_service(department, item, quantity)
 
     return RedirectResponse(
         url="/requests/view",
@@ -73,8 +61,7 @@ def create_request(
 
 @app.get("/requests/{request_id}")
 def get_request(request_id: int):
-    with Session(engine) as session:
-        request = session.get(HospitalRequest, request_id)
+    request = get_request_by_id(request_id)
 
     if request is None:
         raise HTTPException(status_code=404, detail="Request not found")
