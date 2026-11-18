@@ -30,3 +30,19 @@ def create_request(department: str, item: str, quantity: int):
         session.commit()
         session.refresh(new_request)
     return new_request
+
+
+def update_request_status(request_id: int, new_status: str):
+    with Session(engine) as session:
+        request = session.get(HospitalRequest, request_id)
+
+        if request is None:
+            return None
+
+        request.status = new_status
+
+        session.add(request)
+        session.commit()
+        session.refresh(request)
+
+        return request

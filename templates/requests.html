@@ -1,75 +1,67 @@
-
 {% extends "base.html" %}
 {% from "components/status_badge.html" import status_badge %}
-
 {% block title %}Zapotrzebowania | Mini Hospital{% endblock %}
-
 {% block content %}
-<div class="page-heading">
-    <div>
-        <div class="breadcrumb">Moduły / Zapotrzebowania</div>
-        <h1>Zapotrzebowania</h1>
-        <p>Przegląd zapotrzebowań zgłoszonych przez oddziały szpitalne.</p>
-    </div>
-
-    <span class="page-tag">Moduł zakupowy</span>
-</div>
-
-<div class="summary-row">
-    <div class="summary-card">
-        <span>Wszystkie zapotrzebowania</span>
-        <strong>{{ requests | length }}</strong>
-    </div>
-
-    <div class="summary-card">
-        <span>Oczekujące</span>
-        <strong>
-            {{ requests | selectattr("status", "equalto", "pending") | list | length }}
-        </strong>
-    </div>
-</div>
-
-<section class="content-card">
-    <div class="card-heading">
+    <div class="page-heading">
         <div>
-            <h2>Lista zapotrzebowań</h2>
-            <p>Aktualne zgłoszenia oddziałów</p>
+            <div class="breadcrumb">Moduły / Zapotrzebowania</div>
+            <h1>Zapotrzebowania</h1>
+            <p>Przegląd zapotrzebowań zgłoszonych przez oddziały szpitalne.</p>
         </div>
-        <span class="record-count">{{ requests | length }} rekordów</span>
+        <span class="page-tag">Moduł zakupowy</span>
     </div>
-
-    <div class="table-scroll">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Oddział</th>
-                    <th>Produkt</th>
-                    <th>Ilość</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in requests %}
-                <tr>
-                    <td class="id-cell">#{{ item.id }}</td>
-                    <td>{{ item.department }}</td>
-                    <td class="product-cell">{{ item.item }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>
-                        {{ status_badge(item.status) }}
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="5" class="empty-state">
-                        Brak zapotrzebowań
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="summary-row">
+        <div class="summary-card">
+            <span>Wszystkie zapotrzebowania</span>
+            <strong>{{ requests | length }}</strong>
+        </div>
+        <div class="summary-card">
+            <span>Oczekujące</span>
+            <strong>{{ requests | selectattr('status', 'equalto', 'pending') | list | length }}</strong>
+        </div>
     </div>
+    <section class="content-card">
+        <div class="card-heading">
+            <div>
+                <h2>Lista zapotrzebowań</h2>
+                <p>Aktualne zgłoszenia oddziałów</p>
+            </div>
+            <span class="record-count">{{ requests | length }} rekordów</span>
+        </div>
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Oddział</th>
+                        <th>Produkt</th>
+                        <th>Ilość</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in requests %}
+                        <tr>
+                            <td class="id-cell">#{{ item.id }}</td>
+                            <td>{{ item.department }}</td>
+                            <td class="product-cell">{{ item.item }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>
+                                {{ status_badge(item.status) }} {% if item.status == "pending" %}
+                                <button type="button" class="approve-btn" data-request-id="{{ item.id }}">
+                                    Zatwierdź
+                                </button>
+                    {% endif %}
+                </td>
+            </tr>
+{% else %}
+    <tr>
+        <td colspan="5" class="empty-state">Brak zapotrzebowań</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
 </section>
+<script src="{{ url_for('static', path='/js/requests.js') }}" defer></script>
 {% endblock %}
-
